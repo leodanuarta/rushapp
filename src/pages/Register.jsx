@@ -1,7 +1,8 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { useState } from 'react';
-import { auth, storage } from '../firebase';
+import { auth, db, storage } from '../firebase';
 import Add from '../img/addAvatar.png';
 
 const Register = () => {
@@ -15,7 +16,7 @@ const Register = () => {
     const file = e.target[3].files[0];
 
     try {
-      const res = await createUserWithEmailAndPassword(auth, email, password)
+      const res = await createUserWithEmailAndPassword(auth, email, password);
 
       const storageRef = ref(storage, displayName);
 
@@ -38,9 +39,16 @@ const Register = () => {
               displayName,
               photoURL: downloadURL,
             });
+            await setDoc(doc(db, "users", res.user.uid),{
+              uid : res.user.uid,
+              displayName,
+              email,
+              photoURL : downloadURL
+            });
           });
         }
       );
+
     } catch(err){
       setErr(true);
     }
