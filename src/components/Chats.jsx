@@ -1,29 +1,43 @@
-import React from 'react'
+import { doc, onSnapshot } from 'firebase/firestore';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { db } from '../firebase';
 
 const Chats = () => {
+
+  const [chats, setChats] = useState([]);
+
+  const {currentUser} = useContext(AuthContext);
+
+  useEffect(() => {
+    const getChats = () => {
+      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+        setChats(doc.data());
+      });
+      
+      return () => {
+        unsub();
+      };
+    };
+
+    currentUser.uid && getChats();
+    
+  }, [currentUser.uid]);
+
+  console.log(Object.entries(chats));
+
   return (
-    <div className='chats'>
-      <div className="userChat">
-        <img src="https://assets.ayobandung.com/crop/0x0:0x0/750x500/webp/photo/2022/09/20/415105221.jpg" alt="" />
-        <div className="userChatInfo">
-          <span>Danuarta</span>
-          <p>Hello World</p>
+    <div className="chats">
+      {Object.entries(chats)?.map((chat) => (
+
+        <div className="userChat" key={chat[0]}>
+          <img src={chat[1].userInfo.photoURL} alt="" />
+          <div className="userChatInfo">
+            <span>{chat[1].userInfo.displayName}</span>
+            <p>{chat[1].userInfo.lastMessage?.text} World</p>
+          </div>
         </div>
-      </div>
-      <div className="userChat">
-        <img src="https://assets.ayobandung.com/crop/0x0:0x0/750x500/webp/photo/2022/09/20/415105221.jpg" alt="" />
-        <div className="userChatInfo">
-          <span>Danuarta</span>
-          <p>Hello World</p>
-        </div>
-      </div>
-      <div className="userChat">
-        <img src="https://assets.ayobandung.com/crop/0x0:0x0/750x500/webp/photo/2022/09/20/415105221.jpg" alt="" />
-        <div className="userChatInfo">
-          <span>Danuarta</span>
-          <p>Hello World</p>
-        </div>
-      </div>
+      ))}
     </div>
   )
 }
