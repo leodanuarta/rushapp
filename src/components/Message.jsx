@@ -1,6 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-const Message = () => {
+const Message = ({message}) => {
+
+  console.log(message);
+
   return (
     <div className='message owner'>
       <div className="messageInfo">
