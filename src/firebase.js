@@ -2,14 +2,15 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+require('dotenv').config()
 
 const firebaseConfig = {
-  apiKey: "AIzaSyABsrJv2alPEWTJEF-APlJCCLaCqu5ORbI",
-  authDomain: "rushapp-3807a.firebaseapp.com",
-  projectId: "rushapp-3807a",
-  storageBucket: "rushapp-3807a.appspot.com",
-  messagingSenderId: "1021437150568",
-  appId: "1:1021437150568:web:dabbcda105cbe7634cc2dd"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 // Initialize Firebase
